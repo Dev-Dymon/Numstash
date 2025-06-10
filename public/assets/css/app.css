@@ -1,0 +1,61 @@
+/* application styles */
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+:root {
+    --primary-color: #6f42c1;
+    --secondary-color: #007bff;
+    --primary-alt-color: #6529c7;
+    --color-white: #fff;
+    --dark: #343a40;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --success: #28a745;
+}
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Manrope', 'Roboto', sans-serif !important;
+}
+/* global components */
+a{
+    text-decoration: none;
+}
+.main-btn{
+    padding: 10px 20px;
+    background: var(--primary-color);
+    color: var(--color-white);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.4s ease-in;
+    border: 2px solid var(--primary-color);
+}
+.main-btn:hover{
+    background: var(--primary-alt-color);
+}
+.main-btn-alt{
+    padding: 10px 20px;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 8px;
+    font-weight: 500;
+    transition: 0.4s ease-in;
+}
+.main-btn-alt:hover{
+    background: var(--primary-color);
+    color: var(--color-white);
+}
+
+
+/* navbar section */
+.navbar{
+    padding: 10px 20px;
+    background: var(--color-white);
+    box-shadow: 1px 1px 5px var(--dark);
+    display: flex;
+}
+.navbar .logo{
+    /* width: 120px; */
+    height: 60px;
+    overflow: hidden;
+}

@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Message;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Hash;
+
+class AdminController extends Controller
+{
+    public function index()
+    {
+        $users = User::where('usertype', 'user')->count();
+        return view("admin.index", compact('users'));
+    }
+
+    public function message(){
+        $messages = Message::orderBy('id', 'desc')->paginate(21);
+        return view('admin.message', compact('messages'));
+    }
+
+    public function setting()
+    {
+        return view('admin.setting');
+    }
+
+    public function update_details(Request $request)
+    {
+        $id = Auth::user()->id;
+        $user = User::findOrFail($id);
+        $validated = $request->validate([
+            'name' => 'string|min:3|max:225',
+            'email' => 'email|min:8|max:225',
+        ]);
+
+        $user->fill($validated);
+
+        if ($user->save()) {
+            return redirect()->route('admin.setting');
+        }
+        return redirect()->route('admin.setting');
+    }
+
+    public function update(Request $request)
+    {
+        $validated = $request->validateWithBag('updatePassword', [
+            'current_password' => ['required', 'current_password'],
+            'password' => ['required', Password::defaults(), 'confirmed'],
+        ]);
+
+        $request->user()->update([
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        // return back()->with('status', 'password-updated');
+        return redirect()->route('admin.setting');
+    }
+
+    public function delete_message(Request $request){
+        $request->validate([
+            'id' => 'required'
+        ]);
+
+        $id = $request->id;
+        $message = Message::findOrFail($id);
+
+        if ($message->delete()) {
+            return redirect()->route('admin.message');
+        }
+       
+    }
+}
