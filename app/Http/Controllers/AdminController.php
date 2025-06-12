@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
 
@@ -16,6 +17,33 @@ class AdminController extends Controller
     {
         $users = User::where('usertype', 'user')->count();
         return view("admin.index", compact('users'));
+    }
+
+    public function number(){
+
+        $url =  env('TEXTVERIFY_BASE_URL');
+        $token = env('TEXTVERIFY_API_KEY');
+
+        $response = Http::withToken($token)->get($url);
+
+        if ($response->successful()) {
+            // dd($response->json());
+            $services = $response->json()['data']['temporary']['United States'];
+            return view('admin.number', compact('services'));
+        }else {
+            $services = [
+                'data' => [
+                    'temporary' => [
+                        'United States' => [
+                            'service' => '',
+                            'price' => '',
+                            'country' => ''
+                        ],
+                    ],
+                ],
+            ];
+            return view('admin.number', compact('services'));
+        }
     }
 
     public function message(){

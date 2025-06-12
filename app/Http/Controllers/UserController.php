@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
 {
@@ -12,7 +13,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('user.dashboard');
+
+        // $url = 'https://textverify.io/api/v1/services-s1';
+        // $token = '376|NXmYFO13VjQ9t1Emf6EnYkkUOVMzgwYbYTMJoxcO93b0e387';
+
+        $url =  env('TEXTVERIFY_BASE_URL');
+        $token = env('TEXTVERIFY_API_KEY');
+
+        $response = Http::withHeaders([
+            'Authorization' => 'Bearer ' . $token,
+            'Accept' => 'application/json',
+        ])->get($url);
+
+        if ($response->successful()) {
+            // dd($response->json());
+            $services = $response->json()['data']['temporary']['United Kingdom'];
+            return view('user.dashboard', compact('services'));
+        }
     }
 
     /**

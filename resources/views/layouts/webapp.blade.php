@@ -7,7 +7,7 @@
 
     {{-- title and favicon --}}
     <title>@yield('title')</title>
-    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.svg') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/favicon.png') }}" type="image/x-icon">
 
     {{-- meta tags --}}
     <meta name="description" content="@yield('meta_description')">

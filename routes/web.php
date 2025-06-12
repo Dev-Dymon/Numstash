@@ -3,7 +3,6 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouteController;
-use App\Http\Controllers\TextVerifyController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\UserMiddleware;
@@ -26,6 +25,7 @@ Route::post('/send-message', [UserController::class, 'send_message'])->name('mes
 // admins
 Route::middleware(['auth', 'verified', AdminMiddleware::class])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/admin/number', [AdminController::class, 'number'])->name('admin.number');
     Route::get('/admin/message', [AdminController::class, 'message'])->name('admin.message');
     Route::get('/setting', [AdminController::class, 'setting'])->name('admin.setting');
     Route::post('/setting/update', [AdminController::class, 'update_details'])->name('admin.update');

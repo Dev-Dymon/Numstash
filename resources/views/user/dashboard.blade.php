@@ -64,61 +64,25 @@
                 <thead>
                     <tr class="py-5 bg-[#6f42c1] text-white px-6 text-lg font-semibold">
                         <th class="px-6 py-3 text-center">Services</th>
+                        <th class="px-6 py-3 text-center">Country</th>
                         <th class="px-6 py-3 text-center">Price</th>
                         <th class="px-6 py-3 text-center">Buy</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="bg-white border-b-2 border">
-                        <td class="px-6 py-3 text-black text-center">2RedBeans</td>
-                        <td class="px-6 py-3 text-black text-center">₦1,434.00</td>
-                        <td class="px-6 py-3 text-black text-center">
-                            <a href="#"
-                                class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                Buy now
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b-2 border">
-                        <td class="px-6 py-3 text-black text-center">3Fun</td>
-                        <td class="px-6 py-3 text-black text-center">₦1,434.00</td>
-                        <td class="px-6 py-3 text-black text-center">
-                            <a href="#"
-                                class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                Buy now
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b-2 border">
-                        <td class="px-6 py-3 text-black text-center">7Eleven</td>
-                        <td class="px-6 py-3 text-black text-center">₦1,434.00</td>
-                        <td class="px-6 py-3 text-black text-center">
-                            <a href="#"
-                                class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                Buy now
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b-2 border">
-                        <td class="px-6 py-3 text-black text-center">99Ranch</td>
-                        <td class="px-6 py-3 text-black text-center">₦1,434.00</td>
-                        <td class="px-6 py-3 text-black text-center">
-                            <a href="#"
-                                class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                Buy now
-                            </a>
-                        </td>
-                    </tr>
-                    <tr class="bg-white border-b-2 border">
-                        <td class="px-6 py-3 text-black text-center">AARP</td>
-                        <td class="px-6 py-3 text-black text-center">₦1,434.00</td>
-                        <td class="px-6 py-3 text-black text-center">
-                            <a href="#"
-                                class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                Buy now
-                            </a>
-                        </td>
-                    </tr>
+                    @foreach ($services as $service)
+                        <tr class="bg-white border-b-2 border">
+                            <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
+                            <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
+                            <td class="px-6 py-3 text-black text-center">${{ number_format($service['price'], 2) }}</td>
+                            <td class="px-6 py-3 text-black text-center">
+                                <a href="#"
+                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
+                                    Buy now
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
 
