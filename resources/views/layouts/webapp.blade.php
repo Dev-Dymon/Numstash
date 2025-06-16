@@ -18,6 +18,7 @@
 
     <!-- DataTables CSS -->
     <link href="https://cdn.datatables.net/1.13.6/css/dataTables.tailwindcss.min.css" rel="stylesheet" />
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <!-- jQuery (required by DataTables) -->
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
@@ -165,7 +166,7 @@
             const filterControl = $('.dataTables_filter');
 
             const topControls = $(
-                '<div class="dataTables_wrapper-top w-full flex justify-between items-center mb-4"></div>');
+                '<div class="dataTables_wrapper-top min-w-[800px] flex justify-between items-center mb-4"></div>');
             topControls.append(lengthControl).append(filterControl);
 
             $('.dataTables_wrapper').prepend(topControls);

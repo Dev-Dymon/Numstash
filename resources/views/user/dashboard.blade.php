@@ -1,5 +1,6 @@
 @extends('layouts.webapp')
 @section('content')
+
     <div class="py-12 mx-20px">
         <style>
             /* Arrange length and filter in a row */
@@ -60,37 +61,70 @@
             </h1>
             <!-- Services Table -->
 
-            <table id="verifications-table" class="w-full text-sm">
-                <thead>
-                    <tr class="py-5 bg-[#6f42c1] text-white px-6 text-lg font-semibold">
-                        <th class="px-6 py-3 text-center">Services</th>
-                        <th class="px-6 py-3 text-center">Country</th>
-                        <th class="px-6 py-3 text-center">Price</th>
-                        <th class="px-6 py-3 text-center">Buy</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($services as $service)
-                        <tr class="bg-white border-b-2 border">
-                            <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
-                            <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
-                            <td class="px-6 py-3 text-black text-center">${{ number_format($service['price'], 2) }}</td>
-                            <td class="px-6 py-3 text-black text-center">
-                                <a href="#"
-                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                    Buy now
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
 
+            <div class="w-full max-w-screen px-4 py-6" x-data="{ activeTab: 'tab1' }">
+                <!-- Tabs -->
+                <div class="border-b border-gray-300">
+                    <div class="flex justify-between text-sm font-medium text-gray-600">
+                        <button class="w-full py-4 border-b-2"
+                            :class="activeTab === 'tab1' ? 'border-indigo-500 text-indigo-600' :
+                                'border-transparent hover:border-gray-300 hover:text-gray-700'"
+                            @click="activeTab = 'tab1'">
+                            United Kingdom
+                        </button>
+                        <button class="w-full py-4 border-b-2"
+                            :class="activeTab === 'tab2' ? 'border-indigo-500 text-indigo-600' :
+                                'border-transparent hover:border-gray-300 hover:text-gray-700'"
+                            @click="activeTab = 'tab2'">
+                            United States
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tab content -->
+                <div class="mt-6">
+                    <div x-show="activeTab === 'tab1'">
+                        <div class="overflow-x-auto w-full overflow-y-hidden h-fit py-2">
+                            <table id="verifications-table"
+                                class="w-full max-w-[800px] lg:max-w-full text-sm min-w-[800px] mx-auto">
+                                <thead>
+                                    <tr class="py-5 bg-[#6f42c1] text-white px-6 text-lg font-semibold">
+                                        <th class="px-6 py-3 text-center">Services</th>
+                                        <th class="px-6 py-3 text-center">Country</th>
+                                        <th class="px-6 py-3 text-center">Price</th>
+                                        <th class="px-6 py-3 text-center min-w-[80px]">Buy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($services as $service)
+                                        <tr class="bg-white border-b-2 border">
+                                            <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
+                                            <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
+                                            <td class="px-6 py-3 text-black text-center">
+                                                ${{ number_format($service['price'], 2) }}</td>
+                                            <td class="px-6 py-3 text-black text-center">
+                                                <a href="#"
+                                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
+                                                    Buy now
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div x-show="activeTab === 'tab2'" x-cloak>
+                        <h2 class="text-xl font-bold mb-2">Tab 2 Content</h2>
+                        <p>This is the content for tab 2.</p>
+                    </div>
+                </div>
+            </div>
 
             <!-- Verifications Table -->
             <div class="mt-10 bg-white rounded-xl shadow-md p-4">
                 <h2 class="text-[#6f42c1] text-lg font-medium mb-4">VERIFICATIONS</h2>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto w-full">
                     <table class="min-w-full text-sm text-left border">
                         <thead class="bg-gray-100 text-gray-700">
                             <tr>

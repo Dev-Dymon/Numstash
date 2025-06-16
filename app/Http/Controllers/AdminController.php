@@ -19,9 +19,10 @@ class AdminController extends Controller
         return view("admin.index", compact('users'));
     }
 
-    public function number(){
+    public function number()
+    {
 
-        $url =  env('TEXTVERIFY_BASE_URL');
+        $url = env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
 
         $response = Http::withToken($token)->get($url);
@@ -30,7 +31,7 @@ class AdminController extends Controller
             // dd($response->json());
             $services = $response->json()['data']['temporary']['United States'];
             return view('admin.number', compact('services'));
-        }else {
+        } else {
             $services = [
                 'data' => [
                     'temporary' => [
@@ -46,7 +47,8 @@ class AdminController extends Controller
         }
     }
 
-    public function message(){
+    public function message()
+    {
         $messages = Message::orderBy('id', 'desc')->paginate(21);
         return view('admin.message', compact('messages'));
     }
@@ -88,7 +90,8 @@ class AdminController extends Controller
         return redirect()->route('admin.setting');
     }
 
-    public function delete_message(Request $request){
+    public function delete_message(Request $request)
+    {
         $request->validate([
             'id' => 'required'
         ]);
@@ -99,6 +102,7 @@ class AdminController extends Controller
         if ($message->delete()) {
             return redirect()->route('admin.message');
         }
-       
+
     }
+
 }
