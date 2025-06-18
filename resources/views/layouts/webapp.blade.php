@@ -202,6 +202,12 @@
             }, 0);
 
         });
+
+
+        $(document).ready(function() {
+            $('#verifications-table2').DataTable();
+        });
+        
     </script>
 </body>
 

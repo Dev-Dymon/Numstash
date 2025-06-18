@@ -25,6 +25,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'usertype'
     ];
 
+
+    public function wallet(){
+        return $this->hasOne(Wallets::class);
+    }
+
+
+
+
+
+
     /**
      * The attributes that should be hidden for serialization.
      *

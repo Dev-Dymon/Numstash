@@ -1,6 +1,5 @@
 @extends('layouts.webapp')
 @section('content')
-
     <div class="py-12 mx-20px">
         <style>
             /* Arrange length and filter in a row */
@@ -56,9 +55,18 @@
 
         <div class="min-h-screen bg-white text-gray-800 p-6">
             <!-- Welcome message -->
-            <h1 class="text-2xl font-light text-center mb-6">
-                Welcome, <span class="text-blue-500 font-medium">{{ Auth::user()->name }}</span>
-            </h1>
+            <div class="flex justify-between align-center">
+                <h1 class="text-2xl font-light text-center mb-6">
+                    Welcome, <span class="text-blue-500 font-medium">{{ Auth::user()->name }}</span>
+                </h1>
+                <div>
+                    @if ($wallet->balance)
+                        <p class="main-btn">₦{{ number_format($wallet->balance, 2) }}</p>
+                    @else
+                        <p class="main-btn">₦0</p>
+                    @endif
+                </div>
+            </div>
             <!-- Services Table -->
 
 
@@ -70,13 +78,13 @@
                             :class="activeTab === 'tab1' ? 'border-indigo-500 text-indigo-600' :
                                 'border-transparent hover:border-gray-300 hover:text-gray-700'"
                             @click="activeTab = 'tab1'">
-                            United Kingdom
+                            United States
                         </button>
                         <button class="w-full py-4 border-b-2"
                             :class="activeTab === 'tab2' ? 'border-indigo-500 text-indigo-600' :
                                 'border-transparent hover:border-gray-300 hover:text-gray-700'"
                             @click="activeTab = 'tab2'">
-                            United States
+                            United Kingdom
                         </button>
                     </div>
                 </div>
@@ -85,8 +93,8 @@
                 <div class="mt-6">
                     <div x-show="activeTab === 'tab1'">
                         <div class="overflow-x-auto w-full overflow-y-hidden h-fit py-2">
-                            <table id="verifications-table"
-                                class="w-full max-w-[800px] lg:max-w-full text-sm min-w-[800px] mx-auto">
+                            <table id="verifications-table" class="w-full text-sm min-w-[800px] mx-auto"
+                                style="min-width: 800px;">
                                 <thead>
                                     <tr class="py-5 bg-[#6f42c1] text-white px-6 text-lg font-semibold">
                                         <th class="px-6 py-3 text-center">Services</th>
@@ -101,7 +109,7 @@
                                             <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                ${{ number_format($service['price'], 2) }}</td>
+                                                ₦{{ number_format($service['price'], 2) }}</td>
                                             <td class="px-6 py-3 text-black text-center">
                                                 <a href="#"
                                                     class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
@@ -115,8 +123,35 @@
                         </div>
                     </div>
                     <div x-show="activeTab === 'tab2'" x-cloak>
-                        <h2 class="text-xl font-bold mb-2">Tab 2 Content</h2>
-                        <p>This is the content for tab 2.</p>
+                        <div class="overflow-x-auto w-full overflow-y-hidden h-fit py-2">
+                            <table id="verifications-table2" class="w-full text-sm min-w-[800px] mx-auto"
+                                style="min-width: 800px;">
+                                <thead>
+                                    <tr class="py-5 bg-[#6f42c1] text-white px-6 text-lg font-semibold">
+                                        <th class="px-6 py-3 text-center">Services</th>
+                                        <th class="px-6 py-3 text-center">Country</th>
+                                        <th class="px-6 py-3 text-center">Price</th>
+                                        <th class="px-6 py-3 text-center min-w-[80px]">Buy</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($servicesuk as $serviceuk)
+                                        <tr class="bg-white border-b-2 border">
+                                            <td class="px-6 py-3 text-black text-center">{{ $serviceuk['service'] }}</td>
+                                            <td class="px-6 py-3 text-black text-center">{{ $serviceuk['country'] }}</td>
+                                            <td class="px-6 py-3 text-black text-center">
+                                                ₦{{ number_format($serviceuk['price'], 2) }}</td>
+                                            <td class="px-6 py-3 text-black text-center">
+                                                <a href="#"
+                                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
+                                                    Buy now
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

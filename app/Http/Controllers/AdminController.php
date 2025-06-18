@@ -27,10 +27,13 @@ class AdminController extends Controller
 
         $response = Http::withToken($token)->get($url);
 
+        // response for united kingdom
         if ($response->successful()) {
             // dd($response->json());
             $services = $response->json()['data']['temporary']['United States'];
-            return view('admin.number', compact('services'));
+            $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
+            
+            return view('admin.number', compact('services', 'servicesuk'));
         } else {
             $services = [
                 'data' => [
@@ -43,8 +46,20 @@ class AdminController extends Controller
                     ],
                 ],
             ];
-            return view('admin.number', compact('services'));
+            $servicesuk = [
+                'data' => [
+                    'temporary' => [
+                        'United Kingdom' => [
+                            'service' => '',
+                            'price' => '',
+                            'country' => ''
+                        ],
+                    ],
+                ],
+            ];
+            return view('admin.number', compact('services', 'servicesuk'));
         }
+
     }
 
     public function message()

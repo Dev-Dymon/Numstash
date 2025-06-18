@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 
 class UserController extends Controller
@@ -17,6 +18,9 @@ class UserController extends Controller
         // $url = 'https://textverify.io/api/v1/services-s1';
         // $token = '376|NXmYFO13VjQ9t1Emf6EnYkkUOVMzgwYbYTMJoxcO93b0e387';
 
+        $user = Auth::user()->load('wallet');
+        $wallet = $user->wallet;
+
         $url =  env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
 
@@ -27,8 +31,9 @@ class UserController extends Controller
 
         if ($response->successful()) {
             // dd($response->json());
-            $services = $response->json()['data']['temporary']['United Kingdom'];
-            return view('user.dashboard', compact('services'));
+            $services = $response->json()['data']['temporary']['United States'];
+            $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
+            return view('user.dashboard', compact('services', 'servicesuk', 'wallet'));
         }
     }
 
