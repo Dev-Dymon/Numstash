@@ -109,7 +109,7 @@
                                             <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                ₦{{ number_format($amount * $service['price'], 2) }}</td>
+                                                ₦{{ number_format(($amount * $service['price']) + $added, 2) }}</td>
                                             <td class="px-6 py-3 text-black text-center">
                                                 <a href="#"
                                                     class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
@@ -140,7 +140,7 @@
                                             <td class="px-6 py-3 text-black text-center">{{ $serviceuk['service'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">{{ $serviceuk['country'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                ₦{{ number_format($serviceuk['price'], 2) }}</td>
+                                                ₦{{ number_format(($amount * $serviceuk['price']) + $added, 2) }}</td>
                                             <td class="px-6 py-3 text-black text-center">
                                                 <a href="#"
                                                     class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">

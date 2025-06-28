@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddAmount;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,14 +18,20 @@ class UserController extends Controller
     public function index()
     {
 
+        // gets the added amount by the admin
+        $add_amount = AddAmount::orderBy('id', 'DESC')->firstOrFail();
+        $added = $add_amount->added_amount;
 
+        // loads the user wallets
         $user = Auth::user()->load('wallet');
         $wallet = $user->wallet;
 
+        // gets the APIs and their keys
         $url =  env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
         $currency = env('CURRENCY_API');
 
+        // checks if the API is not cached and resquest it
         if (!Cache::has('currency_amount')) {
             $currency_response = Http::timeout(30)->get($currency);
             
@@ -34,11 +41,11 @@ class UserController extends Controller
             }else {
                 Log::error('Currency API call failed: ' . $currency_response->status());
             }
-        }else {
+        }else { // return the cached api response
             $amount = Cache::get('currency_amount');
         }
 
-        
+        // request the list of avaliable services
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
@@ -48,7 +55,7 @@ class UserController extends Controller
             // dd($response->json());
             $services = $response->json()['data']['temporary']['United States'];
             $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
-            return view('user.dashboard', compact('services', 'servicesuk', 'wallet', 'amount'));
+            return view('user.dashboard', compact('services', 'servicesuk', 'wallet', 'amount', 'added'));
         }
     }
 
