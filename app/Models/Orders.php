@@ -10,7 +10,9 @@ class Orders extends Model
         'user_id',
         'service',
         'amount',
+        'profit',
         'order_status',
+        'country',
     ];
 
 

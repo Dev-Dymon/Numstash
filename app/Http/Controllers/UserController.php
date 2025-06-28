@@ -54,6 +54,7 @@ class UserController extends Controller
         if ($response->successful()) {
             // dd($response->json());
             $services = $response->json()['data']['temporary']['United States'];
+            // dd($services);
             $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
             return view('user.dashboard', compact('services', 'servicesuk', 'wallet', 'amount', 'added'));
         }

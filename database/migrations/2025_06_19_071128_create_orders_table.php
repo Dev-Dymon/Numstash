@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('service')->comment('e.g whatsapp');
             $table->decimal('amount', 12, 2); // price deducted
+            $table->decimal('profit', 12, 2); // price deducted
             $table->string('order_status')->default('pending'); // success/failed
+            $table->string('country'); // success/failed
             $table->timestamps();
         });
     }

@@ -53,6 +53,40 @@
             }
         </style>
 
+        {{-- alert --}}
+        @if (Session::has('error'))
+            <div id="dangerAlert"
+                class="fixed top-4 right-4 z-50 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg shadow-md flex items-start justify-between max-w-md"
+                role="alert">
+                <!-- Alert message content -->
+                <div class="flex items-center">
+                    <!-- Exclamation Icon (optional, using SVG for simple icon) -->
+                    <svg class="h-6 w-6 text-red-500 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                        </path>
+                    </svg>
+                    <div>
+                        <span class="block sm:inline">{{ Session::get('error') }}</span>
+                    </div>
+                </div>
+
+                <!-- Dismiss Button -->
+                <button type="button"
+                    class="ml-auto -mx-1.5 -my-1.5 bg-red-100 text-red-500 rounded-lg focus:ring-2 focus:ring-red-400 p-1.5 hover:bg-red-200 inline-flex h-8 w-8 justify-center items-center"
+                    aria-label="Dismiss" onclick="dismissAlert()">
+                    <!-- X Icon for dismiss button (using SVG) -->
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd"
+                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                            clip-rule="evenodd"></path>
+                    </svg>
+                </button>
+            </div>
+        @endif
+        {{-- alert --}}
+
         <div class="min-h-screen bg-white text-gray-800 p-6">
             <!-- Welcome message -->
             <div class="flex justify-between align-center">
@@ -105,16 +139,30 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($services as $service)
+                                        @php
+                                            $apiPrice1 = $amount * $service['price'];
+                                            $salePrice1 = $apiPrice1 + $added; // your profit
+                                        @endphp
                                         <tr class="bg-white border-b-2 border">
                                             <td class="px-6 py-3 text-black text-center">{{ $service['service'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">{{ $service['country'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                ₦{{ number_format(($amount * $service['price']) + $added, 2) }}</td>
+                                                ₦{{ number_format($salePrice1, 2) }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                <a href="#"
-                                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                                    Buy now
-                                                </a>
+                                                <form action="{{ route('dashboard.buy') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="service" value="{{ $service['service'] }}">
+                                                    <input type="hidden" name="service_key" value="{{ $service['key'] }}">
+                                                    <input type="hidden" name="api_price" value="{{ $apiPrice1 }}">
+                                                    <input type="hidden" name="sale_price" value="{{ $salePrice1 }}">
+                                                    <input type="hidden" name="request_premium" value="{{ $service['has_premium'] }}">
+                                                    <input type="hidden" name="state" value="AL">
+
+                                                    <button type="submit"
+                                                        class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
+                                                        Buy now
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -136,16 +184,33 @@
                                 </thead>
                                 <tbody>
                                     @foreach ($servicesuk as $serviceuk)
+                                        @php
+                                            $apiPrice = $amount * $serviceuk['price'];
+                                            $salePrice = $apiPrice + $added; // your profit
+                                        @endphp
                                         <tr class="bg-white border-b-2 border">
                                             <td class="px-6 py-3 text-black text-center">{{ $serviceuk['service'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">{{ $serviceuk['country'] }}</td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                ₦{{ number_format(($amount * $serviceuk['price']) + $added, 2) }}</td>
+                                                ₦{{ number_format($salePrice, 2) }}
+                                            </td>
                                             <td class="px-6 py-3 text-black text-center">
-                                                <a href="#"
-                                                    class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
-                                                    Buy now
-                                                </a>
+                                                <form action="{{ route('dashboard.buy') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="service"
+                                                        value="{{ $serviceuk['service'] }}">
+                                                    <input type="hidden" name="service_key"
+                                                        value="{{ $serviceuk['key'] }}">
+                                                    <input type="hidden" name="api_price" value="{{ $apiPrice }}">
+                                                    <input type="hidden" name="sale_price" value="{{ $salePrice }}">
+                                                    <input type="hidden" name="request_premium" value="10">
+                                                    <input type="hidden" name="state" value="AL">
+
+                                                    <button type="submit"
+                                                        class="bg-[#6f42c1] hover:bg-[#5a33a0] text-white font-medium py-2 px-4 rounded-md transition duration-300 cursor-pointer">
+                                                        Buy now
+                                                    </button>
+                                                </form>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -184,4 +249,14 @@
         </div>
 
     </div>
+
+    <script>
+        // JavaScript function to dismiss the alert
+        function dismissAlert() {
+            const alertElement = document.getElementById('dangerAlert');
+            if (alertElement) {
+                alertElement.classList.add('hidden'); // Add 'hidden' class to hide the alert
+            }
+        }
+    </script>
 @endsection

@@ -51,6 +51,7 @@
                 {{-- <a href="#section" class="menu-items">FAQs</a> --}}
                 <a href="{{ route('home') }}/#contact" class="menu-items">Contact us</a>
                 <a href="{{ route('profile.edit') }}" class="menu-items">Profile</a>
+                <a href="{{ route('profile.edit') }}" class="menu-items">Fund wallet</a>
                 <form action="{{ route('logout') }}" method="POST" id="logout">
                     @csrf
                     <a href="{{ route('logout') }}" class="menu-items"
@@ -126,6 +127,9 @@
                     <hr>
                     <a href="{{ Auth::user()->usertype == 'admin' ? route('admin.index') : route('dashboard') }}"
                         class="menu-items">Dashboard</a>
+
+                    <a href="{{ Auth::user()->usertype == 'admin' ? route('admin.index') : route('dashboard') }}"
+                        class="menu-items">Fund wallet</a>
 
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf

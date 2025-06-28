@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\UserController;
@@ -12,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [RouteController::class, 'index'])->name('home');
+Route::post('/send-message', [UserController::class, 'send_message'])->name('message.send');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -20,8 +23,9 @@ Route::middleware('auth')->group(function () {
 // user
 Route::middleware(['auth', 'verified', UserMiddleware::class])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/buy', [OrderController::class, 'buyNumber'])->name('dashboard.buy');
 });
-Route::post('/send-message', [UserController::class, 'send_message'])->name('message.send');
+
 // admins
 Route::middleware(['auth', 'verified', AdminMiddleware::class])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
