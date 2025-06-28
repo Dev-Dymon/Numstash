@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AddAmount;
 use App\Models\Message;
 use App\Models\User;
 use App\Models\Wallets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Hash;
@@ -23,6 +25,7 @@ class AdminController extends Controller
 
     public function number()
     {
+        $added_amount = AddAmount::select('added_amount')->firstOrFail();
 
         $url = env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
@@ -35,7 +38,7 @@ class AdminController extends Controller
             $services = $response->json()['data']['temporary']['United States'];
             $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
             
-            return view('admin.number', compact('services', 'servicesuk'));
+            return view('admin.number', compact('services', 'servicesuk', 'added_amount'));
         } else {
             $services = [
                 'data' => [
@@ -59,7 +62,23 @@ class AdminController extends Controller
                     ],
                 ],
             ];
-            return view('admin.number', compact('services', 'servicesuk'));
+            return view('admin.number', compact('services', 'servicesuk', 'added_amount'));
+        }
+
+    }
+
+    public function update_amount(Request $request){
+        $request->validate([
+            'amount' => 'required|integer|min:0|max:10000',
+        ]);
+
+        $amount = $request->amount;
+        $response = DB::table('add_amounts')->where('id', 1)->update(['added_amount' => $amount]);
+
+        if ($response) {
+            return redirect()->back()->with('success', 'Profit updated successfully');
+        }else {
+            return redirect()->back()->with('error', 'An error occurred, try again');
         }
 
     }

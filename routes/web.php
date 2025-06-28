@@ -30,6 +30,7 @@ Route::middleware(['auth', 'verified', UserMiddleware::class])->group(function (
 Route::middleware(['auth', 'verified', AdminMiddleware::class])->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/admin/number', [AdminController::class, 'number'])->name('admin.number');
+    Route::post('/admin/number/profit', [AdminController::class, 'update_amount'])->name('admin.number.profit');
     Route::get('/admin/message', [AdminController::class, 'message'])->name('admin.message');
     Route::get('/setting', [AdminController::class, 'setting'])->name('admin.setting');
     Route::post('/setting/update', [AdminController::class, 'update_details'])->name('admin.update');
