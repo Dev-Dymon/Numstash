@@ -9,6 +9,7 @@ use App\Models\Wallets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules\Password;
@@ -27,10 +28,22 @@ class AdminController extends Controller
     {
         $added_amount = AddAmount::select('added_amount')->firstOrFail();
 
+        $currency_url = env('CURRENCY_API');
         $url = env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
 
         $response = Http::withToken($token)->get($url);
+
+        if (!Cache::has('currency_value')) {
+            $currency_response = Http::timeout(30)->get($currency_url);
+
+            // dd($currency_response->json());
+            $nigerian_amount =  $currency_response->json()['conversion_rate'];
+
+            Cache::put('currency_value', $nigerian_amount, now()->addMinutes(60));
+        }else {
+            $nigerian_amount =  Cache::get('currency_value');
+        }
 
         // response for united kingdom
         if ($response->successful()) {
@@ -38,7 +51,7 @@ class AdminController extends Controller
             $services = $response->json()['data']['temporary']['United States'];
             $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
             
-            return view('admin.number', compact('services', 'servicesuk', 'added_amount'));
+            return view('admin.number', compact('services', 'servicesuk', 'added_amount', 'nigerian_amount'));
         } else {
             $services = [
                 'data' => [
@@ -62,7 +75,7 @@ class AdminController extends Controller
                     ],
                 ],
             ];
-            return view('admin.number', compact('services', 'servicesuk', 'added_amount'));
+            return view('admin.number', compact('services', 'servicesuk', 'added_amount', 'nigerian_amount'));
         }
 
     }

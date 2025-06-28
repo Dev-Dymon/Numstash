@@ -370,7 +370,7 @@
     {{-- <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script> --}}
 
     <script>
-        const table = document.getElementById('data-table');
+        {const table = document.getElementById('data-table');
         const tbody = table.querySelector('tbody');
         const rows = Array.from(tbody.querySelectorAll('tr'));
         const searchInput = document.getElementById('search');
@@ -448,7 +448,87 @@
         });
 
         // Initial render
-        renderTable();
+        renderTable();}
+
+        {const table = document.getElementById('data-table2');
+        const tbody = table.querySelector('tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        const searchInput = document.getElementById('search');
+        const pagination = document.getElementById('pagination2');
+        const rowsPerPage = 20;
+        let currentPage = 1;
+        let currentRows = [...rows];
+        let currentSort = {
+            index: null,
+            direction: 'asc'
+        };
+
+        function renderTable(page = 1) {
+            tbody.innerHTML = '';
+            const start = (page - 1) * rowsPerPage;
+            const paginatedRows = currentRows.slice(start, start + rowsPerPage);
+            paginatedRows.forEach(row => tbody.appendChild(row));
+            renderPagination(currentRows.length, page);
+        }
+
+        function renderPagination(total, current) {
+            pagination.innerHTML = '';
+            const totalPages = Math.ceil(total / rowsPerPage);
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = 'page-item' + (i === current ? ' active' : '');
+                li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+                li.addEventListener('click', e => {
+                    e.preventDefault();
+                    currentPage = i;
+                    renderTable(currentPage);
+                });
+                pagination.appendChild(li);
+            }
+        }
+
+        function filterTable(query) {
+            currentRows = rows.filter(row => {
+                return Array.from(row.cells).some(cell =>
+                    cell.textContent.toLowerCase().includes(query.toLowerCase())
+                );
+            });
+            currentPage = 1;
+            renderTable();
+        }
+
+        function sortTable(index) {
+            const direction = (currentSort.index === index && currentSort.direction === 'asc') ? 'desc' : 'asc';
+            currentSort = {
+                index,
+                direction
+            };
+
+            currentRows.sort((a, b) => {
+                const aText = a.cells[index].textContent.trim();
+                const bText = b.cells[index].textContent.trim();
+                return direction === 'asc' ?
+                    aText.localeCompare(bText, undefined, {
+                        numeric: true
+                    }) :
+                    bText.localeCompare(aText, undefined, {
+                        numeric: true
+                    });
+            });
+
+            renderTable(currentPage);
+        }
+
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => sortTable(parseInt(th.dataset.column)));
+        });
+
+        searchInput.addEventListener('input', () => {
+            filterTable(searchInput.value);
+        });
+
+        // Initial render
+        renderTable();}
     </script>
 
 </body>
