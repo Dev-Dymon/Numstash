@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RouteController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WalletsController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\UserMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
 // user
 Route::middleware(['auth', 'verified', UserMiddleware::class])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/initiate', [WalletsController::class, 'initiatePayment'])->name('dashboard.initiatePayment');
+    Route::get('/paystack/callback', [WalletsController::class, 'handleGatewayCallback'])->name('wallet.callback');
+    
     Route::post('/dashboard/buy', [OrderController::class, 'buyNumber'])->name('dashboard.buy');
 });
 

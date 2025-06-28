@@ -51,6 +51,28 @@
                 /* purple */
                 color: white !important;
             }
+
+
+            .modal-fade-enter-active,
+            .modal-fade-leave-active {
+                transition: opacity 0.3s ease;
+            }
+
+            .modal-fade-enter-from,
+            .modal-fade-leave-to {
+                opacity: 0;
+            }
+
+            .modal-scale-enter-active,
+            .modal-scale-leave-active {
+                transition: transform 0.3s ease, opacity 0.3s ease;
+            }
+
+            .modal-scale-enter-from,
+            .modal-scale-leave-to {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
         </style>
 
         {{-- alert --}}
@@ -101,9 +123,12 @@
                     @endif
                 </div>
             </div>
+
+            <button id="openModalBtn" class="main-btn cursor-pointer">
+                Fund account
+            </button>
+
             <!-- Services Table -->
-
-
             <div class="w-full max-w-screen px-4 py-6" x-data="{ activeTab: 'tab1' }">
                 <!-- Tabs -->
                 <div class="border-b border-gray-300">
@@ -155,7 +180,8 @@
                                                     <input type="hidden" name="service_key" value="{{ $service['key'] }}">
                                                     <input type="hidden" name="api_price" value="{{ $apiPrice1 }}">
                                                     <input type="hidden" name="sale_price" value="{{ $salePrice1 }}">
-                                                    <input type="hidden" name="request_premium" value="{{ $service['has_premium'] }}">
+                                                    <input type="hidden" name="request_premium"
+                                                        value="{{ $service['has_premium'] }}">
                                                     <input type="hidden" name="state" value="AL">
 
                                                     <button type="submit"
@@ -246,6 +272,55 @@
                     </table>
                 </div>
             </div>
+
+
+            {{-- ==================== Modal ===================== --}}
+            <!-- The Modal Container (initially hidden) -->
+            <div id="myModal"
+                class="hidden fixed inset-0 flex items-center justify-center z-50 transition-opacity duration-300 ease-in-out">
+                <!-- Modal Overlay/Backdrop -->
+                <div class="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity duration-300 ease-in-out"
+                    onclick="closeModal()"></div>
+
+                <!-- Modal Dialog -->
+                <div class="bg-white rounded-lg shadow-2xl p-6 w-full max-w-sm mx-auto z-10 transform transition-transform duration-300 ease-in-out"
+                    onclick="event.stopPropagation();">
+                    <!-- Modal Header -->
+                    <div class="flex justify-between items-center pb-4 border-b border-gray-200">
+                        <h3 class="text-xl font-semibold text-gray-900">Fund Account</h3>
+                        <button type="button"
+                            class="text-gray-400 hover:text-gray-600 transition duration-150 ease-in-out"
+                            onclick="closeModal()">
+                            <!-- Close Icon (X) using SVG -->
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <form action="{{ route('dashboard.initiatePayment') }}" method="POST">
+                        @csrf
+                        <div class="py-4 text-gray-700">
+                            <p>Enter amount in naira(₦)</p>
+                            <input type="number" placeholder="Enter your amount" name="amount"
+                                value="{{ old('amount') }}" min="100" step="0.01" required
+                                class="w-full mt-1 px-4 py-2 border rounded-md border-gray-300 focus:outline-none focus:ring-2 focus:ring-[--primary-color] focus:border-[--primary-color]" />
+                        </div>
+
+                        <!-- Modal Footer -->
+                        <div class="pt-4 border-t border-gray-200 flex justify-end space-x-2">
+                            <button type="submit"
+                                class="px-[30px] py-2 bg-green-800 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Fund
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {{-- ==================== Modal ===================== --}}
         </div>
 
     </div>
@@ -258,5 +333,42 @@
                 alertElement.classList.add('hidden'); // Add 'hidden' class to hide the alert
             }
         }
+
+        const modal = document.getElementById('myModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+
+        function openModal() {
+            modal.classList.remove('hidden');
+            // Add transition classes for fade-in and scale-in effect
+            modal.classList.add('modal-fade-enter-active');
+            setTimeout(() => {
+                modal.firstElementChild.nextElementSibling.classList.add('modal-scale-enter-active');
+            }, 10); // Small delay to allow fade-in to start
+        }
+
+        function closeModal() {
+            // Add transition classes for fade-out and scale-out effect
+            modal.firstElementChild.nextElementSibling.classList.remove('modal-scale-enter-active');
+            modal.firstElementChild.nextElementSibling.classList.add('modal-scale-leave-active');
+            modal.classList.remove('modal-fade-enter-active');
+            modal.classList.add('modal-fade-leave-active');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Clean up transition classes
+                modal.classList.remove('modal-fade-leave-active');
+                modal.firstElementChild.nextElementSibling.classList.remove('modal-scale-leave-active');
+            }, 300); // Match transition duration
+        }
+
+        // Event listener to open the modal
+        openModalBtn.addEventListener('click', openModal);
+
+        // Optional: Close modal on Escape key press
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeModal();
+            }
+        });
     </script>
 @endsection
