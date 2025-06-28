@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Wallets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -16,7 +17,8 @@ class AdminController extends Controller
     public function index()
     {
         $users = User::where('usertype', 'user')->count();
-        return view("admin.index", compact('users'));
+        $revenue = Wallets::sum('balance');
+        return view("admin.index", compact('users', 'revenue'));
     }
 
     public function number()

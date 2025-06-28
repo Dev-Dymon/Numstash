@@ -38,7 +38,11 @@ return [
     'textverify' => [
         'api_key' => env('TEXTVERIFY_API_KEY'),
         'base_url' => env('TEXTVERIFY_BASE_URL', 'https://textverify.io/api/v1'),
-    ]
+    ],
+
+    'currency_api' => [
+        'url' => env('CURRENCY_API'),
+    ],
 
 
 ];

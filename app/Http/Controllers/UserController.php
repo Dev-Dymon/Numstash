@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -15,15 +17,28 @@ class UserController extends Controller
     public function index()
     {
 
-        // $url = 'https://textverify.io/api/v1/services-s1';
-        // $token = '376|NXmYFO13VjQ9t1Emf6EnYkkUOVMzgwYbYTMJoxcO93b0e387';
 
         $user = Auth::user()->load('wallet');
         $wallet = $user->wallet;
 
         $url =  env('TEXTVERIFY_BASE_URL');
         $token = env('TEXTVERIFY_API_KEY');
+        $currency = env('CURRENCY_API');
 
+        if (!Cache::has('currency_amount')) {
+            $currency_response = Http::timeout(30)->get($currency);
+            
+            if ($currency_response->successful()) {
+                $amount = $currency_response->json()['conversion_rate'];
+                Cache::put('currency_amount', $amount, now()->addMinutes(60));
+            }else {
+                Log::error('Currency API call failed: ' . $currency_response->status());
+            }
+        }else {
+            $amount = Cache::get('currency_amount');
+        }
+
+        
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
@@ -33,7 +48,7 @@ class UserController extends Controller
             // dd($response->json());
             $services = $response->json()['data']['temporary']['United States'];
             $servicesuk = $response->json()['data']['temporary']['United Kingdom'];
-            return view('user.dashboard', compact('services', 'servicesuk', 'wallet'));
+            return view('user.dashboard', compact('services', 'servicesuk', 'wallet', 'amount'));
         }
     }
 
