@@ -1,3 +1,5 @@
+<img src="public/image.png">
+
 ## About NumStash
 NumStash is a dedicated application designed to provide non-VoIP phone numbers for reliable SMS verification services. In an increasingly digital world, many online platforms and services are implementing stricter verification processes that often reject VoIP (Voice over IP) numbers due to their association with spam or temporary usage.
 
