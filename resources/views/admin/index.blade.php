@@ -18,7 +18,7 @@
                 <div class="col-lg-12">
                     <div class="row">
                         <!-- Sales Card -->
-                        <div class="col-xxl-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <div class="card info-card sales-card">
 
                                 <div class="card-body">
@@ -39,7 +39,7 @@
                         <!-- End Sales Card -->
 
                         <!-- Revenue Card -->
-                        <div class="col-xxl-4 col-md-6">
+                        <div class="col-lg-3 col-md-6">
                             <div class="card info-card revenue-card">
 
                                 <div class="card-body">
@@ -62,7 +62,7 @@
                         <!-- End Revenue Card -->
 
                         <!-- Customers Card -->
-                        <div class="col-xxl-4 col-xl-12">
+                        <div class="col-lg-3 col-md-6">
                             <div class="card info-card customers-card">
                                 <div class="card-body">
                                     <h5 class="card-title">
@@ -94,6 +94,50 @@
                             </div>
                         </div>
                         <!-- End Customers Card -->
+
+                        <!-- Account balance Card -->
+                        <div class="col-lg-3 col-md-6">
+                            <div class="card info-card customers-card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        Textverify Account
+                                    </h5>
+
+                                    <div class="d-flex align-items-center">
+                                        <div
+                                            class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-people"></i>
+                                        </div>
+                                        @if ($account_balance1)
+                                            <div>
+                                                <div class="ps-3">
+                                                    <h6>${{ number_format($account_balance1, 2) }}</h6>
+                                                </div>
+                                                <div class="ps-3">
+                                                    <h6>₦{{ number_format($account_balance2, 2) }}</h6>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div>
+                                                <div class="ps-3">
+                                                    <h6>$0.00</h6>
+                                                </div>
+                                                <div class="ps-3">
+                                                    <h6>₦0.00</h6>
+                                                </div>
+                                            </div>
+                                        @endif
+                                        {{-- <div class="ps-3">
+                                            <h6>0</h6>
+                                        </div> --}}
+                                        {{-- <div class="ps-3">
+                                            <h6>0</h6>
+                                        </div> --}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Account balance Card -->
 
                         <!-- Reports -->
                         <div class="col-12">

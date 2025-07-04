@@ -37,6 +37,7 @@ return [
 
     'textverify' => [
         'api_key' => env('TEXTVERIFY_API_KEY'),
+        'account_balance' => env('TEXTVERIFY_ACCOUNT_BALANCE'),
         'base_url' => env('TEXTVERIFY_BASE_URL', 'https://textverify.io/api/v1'),
         'buy_url' => env('TEXTVERIFY_BUY_URL', 'https://textverify.io/api/v1/request-number-s1'),
     ],

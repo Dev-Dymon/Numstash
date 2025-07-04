@@ -215,7 +215,7 @@
                                                     <input type="hidden" name="api_price" value="{{ $apiPrice1 }}">
                                                     <input type="hidden" name="sale_price" value="{{ $salePrice1 }}">
                                                     <input type="hidden" name="request_premium"
-                                                        value="{{ $service['has_premium'] }}">
+                                                        value="10">
                                                     <input type="hidden" name="state" value="AL">
 
                                                     <button type="submit"

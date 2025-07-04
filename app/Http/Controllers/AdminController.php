@@ -20,10 +20,30 @@ class AdminController extends Controller
 {
     public function index()
     {
+        $currency_api = env('CURRENCY_API');
+        if (!Cache::has('currency_value')) {
+            $response = Http::get($currency_api);
+
+            $currency = $response->json()['conversion_rate'];
+
+            $nigerian_price = Cache::put('currency_value', $currency, now()->addMinutes(60));
+
+        }else {
+            $nigerian_price = Cache::get('currency_value');
+        }
+
+
+        $account_response = Http::withToken(env('TEXTVERIFY_API_KEY'))->get(env('TEXTVERIFY_ACCOUNT_BALANCE'));
+
+        if ($account_response->successful()) {
+            $account_balance1 = $account_response->json()['data']['balance'];
+            $account_balance2 = (int)$account_balance1 * $nigerian_price;
+        }
+
         $transcations = Transactions::orderBy('id', 'DESC')->with('user')->limit(10)->get();
         $users = User::where('usertype', 'user')->count();
         $revenue = Wallets::sum('balance');
-        return view("admin.index", compact('users', 'revenue', 'transcations'));
+        return view("admin.index", compact('users', 'revenue', 'transcations', 'account_balance1', 'account_balance2'));
     }
 
     public function number()
