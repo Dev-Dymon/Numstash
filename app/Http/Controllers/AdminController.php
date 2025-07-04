@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AddAmount;
 use App\Models\Message;
+use App\Models\Transactions;
 use App\Models\User;
 use App\Models\Wallets;
 use Illuminate\Http\Request;
@@ -19,9 +20,10 @@ class AdminController extends Controller
 {
     public function index()
     {
+        $transcations = Transactions::orderBy('id', 'DESC')->with('user')->limit(10)->get();
         $users = User::where('usertype', 'user')->count();
         $revenue = Wallets::sum('balance');
-        return view("admin.index", compact('users', 'revenue'));
+        return view("admin.index", compact('users', 'revenue', 'transcations'));
     }
 
     public function number()

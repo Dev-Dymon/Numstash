@@ -139,7 +139,7 @@
                                                         height: 350,
                                                         type: "area",
                                                         toolbar: {
-                                                            show: false,
+                                                            show: true,
                                                         },
                                                     },
                                                     markers: {
@@ -160,7 +160,7 @@
                                                     },
                                                     stroke: {
                                                         curve: "smooth",
-                                                        width: 2,
+                                                        width: 3,
                                                     },
                                                     xaxis: {
                                                         type: "datetime",
@@ -189,27 +189,87 @@
                         </div>
                         <!-- End Reports -->
 
+                        <!-- Recent transactions -->
+                        <div class="col-12">
+                            <div class="card recent-sales overflow-auto">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title">
+                                            Recent Transactions
+                                        </h5>
+
+                                        <a href="#" class="btn btn-primary">View All</a>
+                                    </div>
+
+                                    <table class="table table-border datatable">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">S/N</th>
+                                                <th scope="col">Customer</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">Type</th>
+                                                <th scope="col">Status</th>
+                                                <th scope="col">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                            @php
+                                                $id = 1;
+                                            @endphp
+                                            @foreach ($transcations as $transcation)
+                                                <tr>
+                                                    <th scope="row">{{ $id }}</th>
+                                                    <td>{{ $transcation->user->name }}</td>
+                                                    <td>₦{{ number_format($transcation->amount, 2) }}</td>
+                                                    <td>{{ $transcation->type }}</td>
+                                                    <td>
+                                                        @if ($transcation->status === 'success')
+                                                            <span class="badge bg-success">Approved</span>
+                                                        @elseif ($transcation->status === 'failed')
+                                                            <span class="badge bg-danger">Failed</span>
+                                                        @else
+                                                            <span class="badge bg-warning">Pending</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <div class="w-100 d-flex align-items-center justify-content-start">
+                                                            <form action="" method="POST" class="mx-4">
+                                                                @csrf
+                                                                <button type="button" class="btn btn-primary"><i
+                                                                        class="bi bi-eye-fill"></i></button>
+                                                            </form>
+                                                            <form action="" method="POST">
+                                                                @csrf
+                                                                <button type="button" class="btn btn-danger"><i
+                                                                        class="bi bi-trash"></i></button>
+                                                            </form>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $id++;
+                                                @endphp
+                                            @endforeach
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Recent transactions -->
+
                         <!-- Recent Sales -->
                         <div class="col-12">
                             <div class="card recent-sales overflow-auto">
-                                {{-- <div class="filter">
-                                    <a class="icon" href="#" data-bs-toggle="dropdown"><i
-                                            class="bi bi-three-dots"></i></a>
-                                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                        <li class="dropdown-header text-start">
-                                            <h6>Filter</h6>
-                                        </li>
-
-                                        <li><a class="dropdown-item" href="#">Today</a></li>
-                                        <li><a class="dropdown-item" href="#">This Month</a></li>
-                                        <li><a class="dropdown-item" href="#">This Year</a></li>
-                                    </ul>
-                                </div> --}}
-
                                 <div class="card-body">
-                                    <h5 class="card-title">
-                                        Recent Sales
-                                    </h5>
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <h5 class="card-title">
+                                            Recent Sales
+                                        </h5>
+
+                                        <a href="#" class="btn btn-primary">View All</a>
+                                    </div>
 
                                     <table class="table table-border datatable">
                                         <thead>
