@@ -301,7 +301,7 @@
                     </div>
 
                     <!-- Modal Body -->
-                    <form action="{{ route('dashboard.initiatePayment') }}" method="POST">
+                    <form action="{{ route('wallet.paystack') }}" method="POST">
                         @csrf
                         <div class="py-4 text-gray-700">
                             <p>Enter amount in naira(₦)</p>
@@ -317,6 +317,7 @@
                                 Fund
                             </button>
                         </div>
+
                     </form>
                 </div>
             </div>

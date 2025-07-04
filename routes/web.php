@@ -24,7 +24,7 @@ Route::middleware('auth')->group(function () {
 // user
 Route::middleware(['auth', 'verified', UserMiddleware::class])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('dashboard');
-    Route::post('/dashboard/initiate', [WalletsController::class, 'initiatePayment'])->name('dashboard.initiatePayment');
+    Route::post('/paystack/payment', [WalletsController::class, 'initiatePayment'])->name('wallet.paystack');
     Route::get('/paystack/callback', [WalletsController::class, 'handleGatewayCallback'])->name('wallet.callback');
     
     Route::post('/dashboard/buy', [OrderController::class, 'buyNumber'])->name('dashboard.buy');

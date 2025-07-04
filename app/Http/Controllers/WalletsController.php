@@ -18,12 +18,10 @@ class WalletsController extends Controller
 
         $user = auth()->user();
         $amount = $validated['amount'];
+        $reference = Str::uuid(); // generate unique reference
 
-        // Generate unique reference
-        $reference = Str::uuid();
-
-        // Save a pending transaction
-        $transaction = Transactions::create([
+        // Save pending transaction
+        Transactions::create([
             'user_id' => $user->id,
             'amount' => $amount,
             'type' => 'credit',
@@ -31,15 +29,23 @@ class WalletsController extends Controller
             'status' => 'pending',
         ]);
 
-        // Paystack expects kobo (multiply by 100)
-        $paystackAmount = $amount * 100;
+        // Call Paystack API to initialize transaction
+        $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
+            ->post('https://api.paystack.co/transaction/initialize', [
+                'email' => $user->email,
+                'amount' => $amount * 100, // Paystack expects kobo
+                'reference' => $reference,
+                'callback_url' => route('wallet.callback'),
+                'currency' => 'NGN',
+            ]);
 
-        return redirect()->to("https://api.paystack.co/transaction/initialize?" . http_build_query([
-            'email' => $user->email,
-            'amount' => $paystackAmount,
-            'reference' => $reference,
-            'callback_url' => route('wallet.callback'),
-        ]));
+        if ($response->failed()) {
+            return back()->with('error', 'Unable to initialize payment. Try again.');
+        }
+
+        $authUrl = $response['data']['authorization_url'];
+
+        return redirect($authUrl);
     }
 
 
@@ -53,16 +59,14 @@ class WalletsController extends Controller
             return redirect()->route('home')->with('error', 'Transaction not found.');
         }
 
-        // Verify the transaction via Paystack API
         $response = Http::withToken(env('PAYSTACK_SECRET_KEY'))
             ->get("https://api.paystack.co/transaction/verify/{$reference}");
 
         if ($response->successful() && $response['data']['status'] === 'success') {
             $transaction->update([
-                'status' => 'success'
+                'status' => 'success',
             ]);
 
-            // Update wallet
             $wallet = Wallets::firstOrCreate(
                 ['user_id' => $transaction->user_id],
                 ['balance' => 0]
@@ -70,13 +74,14 @@ class WalletsController extends Controller
 
             $wallet->increment('balance', $transaction->amount);
 
-            return redirect()->route('home')->with('success', 'Wallet funded successfully!');
+            return redirect()->route('dashboard')->with('success', 'Wallet funded successfully!');
         } else {
             $transaction->update([
-                'status' => 'failed'
+                'status' => 'failed',
             ]);
 
-            return redirect()->route('home')->with('error', 'Payment verification failed.');
+            return redirect()->route('dashboard')->with('error', 'Payment verification failed.');
         }
     }
+
 }
